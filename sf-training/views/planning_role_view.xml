@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <!-- DATA TABLE -->
+    <record id="planning_role_training_view_tree" model="ir.ui.view">
+        <field name="name">planning.role.training.view.tree</field>
+        <field name="model">planning.role.training</field>
+        <field name="arch" type="xml">
+            <tree string="Planning Role">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="point_rate" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="amount" optional="show"/>
+                <field name="color" widget="color_picker" optional="show"/>
+                <field name="company_id" optional="show"/>
+                <field name="resource_ids" widget="many2many_tags" optional="show"/>
+                <field name="active" column_invisible="0" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="planning_role_training_view_kanban" model="ir.ui.view">
+        <field name="name">planning.role.training.view.kanban</field>
+        <field name="model">planning.role.training</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <field name="name" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col o_kanban_primary_left">
+                                        <field name="company_id"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col o_kanban_primary_left">
+                                        <field name="resource_ids" widget="many2many_tags"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!-- /DATA TABLE -->
+
+
+    <!-- SEARCH & FILTER -->
+    <record id="planning_role_training_view_search" model="ir.ui.view">
+        <field name="name">Planning Role Search View</field>
+        <field name="model">planning.role.training</field>
+        <field name="arch" type="xml">
+            <search string="Planning Role Search">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="resource_ids"/>
+                <filter name="my_department" string="My Department" domain="[('resource_ids.employee_id.member_of_department', '=', True)]"/>
+                <separator/>
+                <filter name="inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <group string="Group By">
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" />
+                    <filter name="group_by_resource" string="Resource" context="{'group_by': 'resource_ids'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- /SEARCH & FILTER -->
+
+
+    <!-- FORM -->
+    <record id="planning_role_training_view_form" model="ir.ui.view">
+        <field name="name">planning.role.training.view.form</field>
+        <field name="model">planning.role.training</field>
+        <field name="arch" type="xml">
+            <form string="Planning Role">
+                <sheet>
+                    <widget name="web_ribbon" title="Archieved" bg_color="text-bg-danger" invisible="active"/>
+                    <group string="Planning Role Form">
+                        <field name="available_resource_ids" invisible="1"/>
+
+                        <field name="company_id" invisible="0"/>
+                        <field name="currency_id"/>
+                        <field name="name"/>
+                        <field name="point_rate"/>
+                        <field name="amount" widget="currency_id"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+
+                        <field name="resource_ids" widget="many2many_tags" context="{'show_job_title' : True, 'from_planning' : True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- / FORM -->
+
+
+    <!-- MENU -->
+    <record id="planning_role_training_action" model="ir.actions.act_window">
+        <field name="name">Planning Role</field>
+        <field name="res_model">planning.role.training</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="d-block d-sm-none o_view_nocontent_smiling_face">
+                No Roles Found. Let's create one!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="planning_role_training_menu" name="Planning Role" action="planning_role_training_action" parent="hr.menu_config_employee" sequence="25" />
+    <!-- / MENU -->
+
+</odoo>

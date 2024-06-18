@@ -1,34 +1,30 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "sf-training",
-
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
-
-    'description': """
-Long description of module's purpose
+    "name": "Sanbe Farma Module Training",
+    "summary": "Training",
+    "description": """
+Training
+========
+Pelatihan technical Odoo 17 PT Sanbe Farma.
     """,
-
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
-
-    # always loaded
-    'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+    "author": "Mukti Alamsyah, PT Sanbe Farma, PT Arkana Solusi Digital",
+    "website": "https://www.sanbe-farma.com",
+    "category": "Other",
+    "version": "17.0.1.0.0",
+    "license": "OPL-1",
+    "depends": ["base", "mail", "hr"],
+    "data": [
+        # 'security/planning_slot_role.xml',
+        "security/ir.model.access.csv",
+        "data/hr_employee_data.xml",
+        "views/planning_role_view.xml",
+        # 'views/planning_slot_view.xml',
+        # 'views/planning_menu_view.xml',
+        # 'views/views.xml',
+        # 'views/templates.xml',
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+    "autoinstall": False,
+    "installable": True,
+    "application": True,
+    "external_dependencies": {"python": []},
 }
-
