@@ -12,7 +12,7 @@ Pelatihan technical Odoo 17 PT Sanbe Farma.
     "category": "Other",
     "version": "17.0.1.0.0",
     "license": "OPL-1",
-    "depends": ["base", "mail", "hr"],
+    "depends": ["base", "mail", "hr", "project"],
     "data": [
         'security/planning_slot_role.xml',
         "security/ir.model.access.csv",
@@ -20,6 +20,7 @@ Pelatihan technical Odoo 17 PT Sanbe Farma.
         "views/planning_role_view.xml",
         'views/planning_slot_view.xml',
         'views/planning_menu_view.xml',
+        'views/project_inherit_view.xml',
         # 'views/views.xml',
         # 'views/templates.xml',
     ],
