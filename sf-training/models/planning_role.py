@@ -8,13 +8,14 @@ class PlanningRoleTraining(models.Model):
     _description = "Planning Role Training"
     _order = "id desc"
 
+    # Menentukan nilai Default untuk Color secara Angka Random dari 1-11
     def _get_default_color(self):
         return randint(1, 11)
 
-    sequence = fields.Integer()
+    sequence = fields.Integer("Sequence")
     company_id = fields.Many2one(
         comodel_name="res.company",
-        # string='Company',
+        # string="Company",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -55,12 +56,10 @@ class PlanningRoleTraining(models.Model):
         column1="planning_role_id",
         column2="resource_id",
         required=True,
-        # string='Resource',
         domain="[('id', 'in', available_resource_ids)]",
     )
     available_resource_ids = fields.Many2many(
         comodel_name="resource.resource",
-        # string='Available Resource',
         compute="_compute_available_resource_ids",
     )
 
