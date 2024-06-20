@@ -68,7 +68,7 @@ class PlanningSlotTraining(models.Model):
         string="Expected Revenue",
         store=True,
         currency_field="currency_id",
-        groups="sf-training.groups_planning_shift_approver",
+        groups="sanbe_farma_training.groups_planning_shift_approver",
     )
     line_ids = fields.One2many(
         "planning.slot.training.line", "slot_training_id", string="Line"
@@ -79,6 +79,18 @@ class PlanningSlotTraining(models.Model):
     project_id = fields.Many2one(
         "project.project", string="Project", index=True, copy=False, tracking=True
     )
+    actual_revenue = fields.Monetary(
+        compute="_compute_actual_revenue",
+        string="Actual Revenue",
+        store=True,
+        currency_field="currency_id",
+        groups="sanbe_farma_training.groups_planning_shift_approver",
+    )
+
+    @api.depends("expected_revenue", "actual_progress")
+    def _compute_actual_revenue(self):
+        for rec in self:
+            rec.actual_revenue = rec.expected_revenue * rec.actual_progress / 100
 
     """
         Compute Actual Progress berdasarkan nilai Current Progress dan State Line IDS
@@ -190,6 +202,16 @@ class PlanningSlotTrainingLine(models.Model):
     _name = "planning.slot.training.line"
     _description = "Planning Slot Training Line"
 
+    project_update_id = fields.Many2one(
+        "project.update", string="Project Update", index=True, copy=False
+    )
+    project_id = fields.Many2one(
+        "project.project",
+        string="Project",
+        index=True,
+        store=True,
+        related="project_update_id.project_id",
+    )
     slot_training_id = fields.Many2one(
         "planning.slot.training",
         string="Slot Training",
@@ -197,7 +219,7 @@ class PlanningSlotTrainingLine(models.Model):
         copy=False,
         tracking=True,
     )
-    date = fields.Date("Date", default=lambda self: fields.Date.context_today(self))
+    date = fields.Date("Date", related="project_update_id.date", store=True)
     role_id = fields.Many2one(
         "planning.role.training", string="Role", related="slot_training_id.role_id"
     )

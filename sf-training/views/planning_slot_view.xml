@@ -15,9 +15,10 @@
                 <field name="role_id"/>
                 <field name="resource_id"/>
                 <field name="number_of_mandays"/>
-                <field name="total_points" avg="Average Points" groups="sf-training.groups_planning_shift_approver"/>
+                <field name="total_points" avg="Average Points" groups="sanbe_farma_training.groups_planning_shift_approver"/>
                 <field name="expected_revenue" sum="Total Expected Revenue"/>
                 <field name="actual_progress"/>
+                <field name="actual_revenue" sum="Total Actual Revenue"/>
                 <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'draft'" decoration-warning="state == 'to_approve'"/>
             </tree>
 
@@ -46,7 +47,7 @@
                 <header>
                     <button name="action_confirm" string="Confirm" type="object" invisible="state != 'draft'" class="oe_highlight" />
                     <button name="action_set_to_draft" string="Set to Draft" type="object" invisible="state != 'to_approve'" />
-                    <button name="action_approved" string="Approve" type="object" invisible="state != 'to_approve'" groups="sf-training.groups_planning_shift_approver" class="oe_highlight" />
+                    <button name="action_approved" string="Approve" type="object" invisible="state != 'to_approve'" groups="sanbe_farma_training.groups_planning_shift_approver" class="oe_highlight" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,approved" />
                 </header>
                 <sheet>
@@ -76,6 +77,7 @@
                         <field name="total_points"/>
                         <field name="expected_revenue"/>
                         <field name="actual_progress"/>
+                        <field name="actual_revenue"/>
                     </group>
 
                     <notebook>
@@ -101,6 +103,18 @@
                     <field name="message_ids"/>
                 </div>
             </form>
+        </field>
+    </record>
+
+    <record id="planning_slot_training_view_pivot" model="ir.ui.view">
+        <field name="name">planning.slot.training.view.pivot</field>
+        <field name="model">planning.slot.training</field>
+        <field name="arch" type="xml">
+            <pivot string="Planning Shift">
+                <field name="name" type="row"/>
+                <field name="start_date" interval="month" type="col"/>
+                <field name="expected_revenue" type="measure"/>
+            </pivot>
         </field>
     </record>
 
@@ -132,7 +146,7 @@
     <record id="planning_slot_action" model="ir.actions.act_window">
         <field name="name">Planning Shift</field>
         <field name="res_model">planning.slot.training</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="planning_slot_training_view_search"/>
@@ -154,6 +168,13 @@
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="planning_slot_action"/>
         <field name="view_id" ref="planning_slot_view_form"/>
+    </record>
+
+    <record id="planning_slot_action_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="planning_slot_action"/>
+        <field name="view_id" ref="planning_slot_training_view_pivot"/>
     </record>
 
 </odoo>
